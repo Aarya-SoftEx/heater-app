@@ -1,18 +1,28 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const Login: React.FC = () => {
+const Login = () => {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
+    setError("");
     setLoading(true);
 
     try {
@@ -30,22 +40,49 @@ const Login: React.FC = () => {
         }
       );
 
-      const data = await res.json();
-      console.log("API response:", data);
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Failed to parse JSON:", err);
+      }
 
+      console.log("Login API response:", data);
+
+   
       if (!res.ok) {
-        // backend se error message hua to
-        alert(data.message || "Login failed");
-        setError(data.message || "Login failed");
+        let message = (data && data.message) || "Login failed";
+
+        if (res.status === 404) {
+          message = "User not found (please signup first)";
+        } else if (res.status === 401) {
+          message = "Invalid email or password";
+        }
+
+        setError(message);
         return;
       }
 
-   
+      if (!data || data.success === false || !data.token) {
+        const message =
+          (data && data.message) || "Invalid email or password (from API)";
+        setError(message);
+        return;
+      }
+
+      localStorage.setItem("token", data.token);
+      if (data.user) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+      }
+
       alert("Login successful!");
-    } catch (err: any) {
+
+      navigate("/"); 
+    } catch (err) {
       console.error("Login error:", err);
-      setError(err.message || "Something went wrong");
-      alert("Something went wrong. Please try again.");
+      const message =
+        err.message || "Something went wrong. Please try again later.";
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -67,32 +104,38 @@ const Login: React.FC = () => {
       >
         {/* Email */}
         <div className="mb-3">
-          <label>Email:</label>
+          <label className="form-label">Email:</label>
           <input
             type="email"
+            name="email"
             className="form-control"
             placeholder="Enter email"
             value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            onChange={handleChange}
             required
           />
         </div>
 
         {/* Password */}
         <div className="mb-3">
-          <label>Password:</label>
+          <label className="form-label">Password:</label>
           <input
             type="password"
+            name="password"
             className="form-control"
             placeholder="Enter password"
             value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            onChange={handleChange}
             required
           />
         </div>
 
+        {/* Error message */}
         {error && (
-          <p style={{ color: "red", fontSize: 13 }} className="mb-2 text-center">
+          <p
+            style={{ color: "red", fontSize: 13 }}
+            className="mb-2 text-center"
+          >
             {error}
           </p>
         )}
