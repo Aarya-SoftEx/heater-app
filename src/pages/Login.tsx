@@ -1,19 +1,24 @@
 import React, { useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-const Login = () => {
+import { LoginSchema, type LoginForm } from "../validation/authSchemas";
+import { loginUser, type ApiResponse } from "../api/auth";
+
+const Login: React.FC = () => {
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<LoginForm>({
     email: "",
     password: "",
   });
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
@@ -21,68 +26,70 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
+
+    // ✅ Zod validation (from separate file)
+    const result = LoginSchema.safeParse(form);
+
+    if (!result.success) {
+      const firstIssue = result.error.issues[0];
+      const message = firstIssue.message || "Invalid form data";
+
+      setError(message);
+      toast.success(message);
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const res = await fetch(
-        "https://overdecorative-noncosmically-lucile.ngrok-free.dev/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: form.email,
-            password: form.password,
-          }),
-        }
-      );
-
-      let data = null;
-      try {
-        data = await res.json();
-      } catch (err) {
-        console.error("Failed to parse JSON:", err);
-      }
+      // ✅ API call (from separate file)
+      const { data, status, ok } = await loginUser({
+        email: form.email,
+        password: form.password,
+      });
 
       console.log("Login API response:", data);
 
-      if (!res.ok) {
-        let message = (data && data.message) || "Login failed";
+      if (!ok) {
+        let message = data?.message || "Login failed";
 
-        if (res.status === 404) {
+        if (status === 404) {
           message = "User not found (please signup first)";
-        } else if (res.status === 401) {
+        } else if (status === 401) {
           message = "Invalid email or password";
         }
 
         setError(message);
+        toast.success(message);
         return;
       }
 
       if (!data || data.success === false || !data.token) {
-        const message =
-          (data && data.message) || "Invalid email or password (from API)";
+        const message = data?.message || "Invalid email or password (from API)";
         setError(message);
+        toast.error(message);
         return;
       }
 
+      // ✅ Save token & user
       localStorage.setItem("token", data.token);
       if (data.user) {
         localStorage.setItem("user", JSON.stringify(data.user));
       }
 
-      alert("Login successful!");
-
-      navigate("/home");
-    } catch (err) {
+      toast.success("Login successful!");
+      navigate("/");
+    } catch (err: Error | unknown) {
       console.error("Login error:", err);
-      const message =
-        err.message || "Something went wrong. Please try again later.";
-      setError(message);
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please try again later.";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -106,7 +113,9 @@ const Login = () => {
               />
             </div>
           </div>
+
           <div className="col-xl-1 d-none d-xl-block"></div>
+
           <div className="col-lg-6 col-xl-5">
             <div className="login-form">
               <div className="scrollable-content">
@@ -114,10 +123,10 @@ const Login = () => {
                   <img
                     className="mb-40"
                     src="/assets/images/logo.svg"
-                    alt="Patel Heater Contorl Pvt Ltd"
+                    alt="Patel Heater Control Pvt Ltd"
                   />
-                  {/* <h4 className="login-subtitle">Login</h4> */}
                 </div>
+
                 <form onSubmit={handleSubmit}>
                   {/* Email */}
                   <div className="mb-4">
@@ -129,11 +138,10 @@ const Login = () => {
                       <input
                         type="email"
                         className="form-control"
+                        name="email"
                         placeholder="Enter your email address"
                         value={form.email}
-                        onChange={(e) =>
-                          setForm({ ...form, email: e.target.value })
-                        }
+                        onChange={handleChange}
                       />
                     </div>
                   </div>
@@ -141,7 +149,6 @@ const Login = () => {
                   {/* Password */}
                   <div className="mb-3">
                     <label className="form-label">Password</label>
-
                     <div className="input-group password-field">
                       <span className="input-group-text">
                         <i className="bi bi-lock-fill"></i>
@@ -153,9 +160,7 @@ const Login = () => {
                         id="currentPassword"
                         name="password"
                         value={form.password}
-                        onChange={(e) =>
-                          setForm({ ...form, password: e.target.value })
-                        }
+                        onChange={handleChange}
                         placeholder="**********"
                       />
 
@@ -173,23 +178,21 @@ const Login = () => {
                     </div>
                   </div>
 
-                  {error && (
+                  {/* {error && (
                     <p
-                      style={{ color: "red", fontSize: 13 }}
+                      style={{ color: "blue", fontSize: 13 }}
                       className="mb-2 text-center"
                     >
                       {error}
                     </p>
-                  )}
+                  )} */}
 
-                  {/* Forgot Password Link */}
                   <p className="text-center text-md-end mb-5 ">
-                    <Link to="/forgot-password" className="forgot-link">
+                    <Link to="/forgotpassword" className="forgot-link">
                       Forgot Password?
                     </Link>
                   </p>
 
-                  {/* Submit */}
                   <button
                     type="submit"
                     className="btn btn-primary btn-login w-100 mb-4"
@@ -198,9 +201,8 @@ const Login = () => {
                     {loading ? "Logging in..." : "Login"}
                   </button>
 
-                  {/* Signup Link */}
                   <p className="text-center mb-3 fw-medium">
-                    Don't have an account?{" "}
+                    Don't have an account?
                   </p>
                   <Link
                     to="/signup"
