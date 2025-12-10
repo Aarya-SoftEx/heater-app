@@ -77,7 +77,7 @@ const Login = () => {
 
       alert("Login successful!");
 
-      navigate("/");
+      navigate("/home");
     } catch (err) {
       console.error("Login error:", err);
       const message =
