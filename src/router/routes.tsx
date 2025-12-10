@@ -34,19 +34,15 @@ const routes: AppRoute[] = [
       {
         path: "home",
         element: <SectionWrapper />,
-        children: [
-          { path: "", element: <Home /> },
-        ],
+        children: [{ path: "", element: <Home /> }],
       },
       {
         path: "designs",
         element: <SectionWrapper />,
-        children: [
-        ],
+        children: [],
       },
     ],
   },
-
 ];
 
 export default routes;
