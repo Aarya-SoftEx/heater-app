@@ -158,6 +158,10 @@ button:focus {
     margin-bottom: 56px;
 }
 
+.login-img img {
+    max-width: 80%;
+}
+
 .login-form {
     max-width: 625px;
     max-height: calc(100vh - 100px);
@@ -182,7 +186,7 @@ button:focus {
     background-color: #FBFDFF !important;
     border-color: #DDE5EF;
     border-radius: 6px;
-    padding: 18px 24px;
+    padding: 16px 20px;
     font-size: 15px;
     line-height: 20px;
 }
@@ -233,7 +237,7 @@ input:-webkit-autofill {
     background-color: #FBFDFF;
     border-radius: 6px;
     color: #B1C2D7;
-    padding: 13px 24px;
+    padding: 10px 20px;
     border-color: #DDE5EF;
 }
 
@@ -350,10 +354,17 @@ input:-webkit-autofill {
 .btn-login,
 .btn-signup {
     --bs-btn-padding-y: 18px;
-    font-size: 22px;
+    font-size: 18px;
 }
 
 .forgot-link {
     font-weight: 600;
     font-size: 18px;
+}
+
+
+
+/*-------------------------- Responsive CSS --------------------------*/
+.login-form {
+    padding: 40px;
 }
