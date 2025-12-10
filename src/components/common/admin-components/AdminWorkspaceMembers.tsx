@@ -7,7 +7,7 @@ import React from "react";
 //   AdminWorkspaceMember,
 //   PaginationState,
 // } from "../../../types/index.d.ts";
-// import Pagination from "../../../components/common/ui-common/Pagination";
+// import Pagination from "../../../components/common/ui-components/Pagination";
 // import { useParams } from "react-router-dom";
 // import { Link } from "react-router-dom";
 // import { toast } from "react-toastify";

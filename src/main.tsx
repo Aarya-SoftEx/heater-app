@@ -6,7 +6,7 @@ import App from "./App.tsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import "./styles/css/style.css";
+import "./index.css";
 
 // ---- JS Libraries ----
 import "bootstrap/dist/js/bootstrap.bundle.min.js";

@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, useRoutes } from "react-router-dom";
 import routes from "./router/routes";
 import "react-toastify/dist/ReactToastify.css";
-import Loader from "./components/common/ui-common/Loader.tsx";
+import Loader from "./components/common/ui-components/Loader.tsx";
 import PageEffects from "./components/common/PageEffects";
 
 const AppRoutes = () => {

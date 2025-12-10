@@ -6,12 +6,12 @@
 //   adminDeleteWorkspace,
 //   adminUpdateWorkspaceSettings,
 // } from "../services/apiService";
-// import Pagination from "../components/common/ui-common/Pagination";
+// import Pagination from "../components/common/ui-components/Pagination";
 // import { setLoading } from "../state/slices/loadingSlice";
 // import { useDispatch } from "react-redux";
 // import { toast } from "react-toastify";
 // import { useNavigate } from "react-router-dom";
-// import ConfirmDeleteModal from "../components/common/ui-common/ConfirmDeleteModal";
+// import ConfirmDeleteModal from "../components/common/ui-components/ConfirmDeleteModal";
 
 export default function SuperAdminSettings() {
   // const [expandedRow, setExpandedRow] = useState<string | null>(null);

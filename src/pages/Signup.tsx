@@ -1,115 +1,82 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { z } from "zod";
-import axios from "axios";
-const SignupSchema = z
-  .object({
-    firstName: z
-      .string()
-      .min(1, "First Name is required")
-      .min(2, "First Name must be at least 2 characters"),
 
-    lastName: z
-      .string()
-      .min(1, "Last Name is required")
-      .min(2, "Last Name must be at least 2 characters"),
-
-    email: z.string().min(1, "Email is required").email("Invalid email format"),
-
-    password: z
-      .string()
-      .min(1, "Password is required")
-      .min(8, "Password must be at least 8 characters")
-      .regex(
-        /[A-Z]/,
-        "Password must contain at least one uppercase letter (A-Z)"
-      )
-      .regex(
-        /[a-z]/,
-        "Password must contain at least one lowercase letter (a-z)"
-      )
-      .regex(/[0-9]/, "Password must contain at least one number (0-9)")
-      .regex(
-        /[@#$%^&*]/,
-        "Password must contain at least one special symbol (@ # $ % ^ & *)"
-      ),
-
-    confirmPassword: z.string().min(1, "Confirm Password is required"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-
-const Signup = () => {
+const Signup: React.FC = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
     email: "",
+    phone: "",
     password: "",
     confirmPassword: "",
   });
 
-  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [apiError, setApiError] = useState(null);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrors({});
-    setApiError(null);
+    setError(null);
 
-    const result = SignupSchema.safeParse(form);
-
-    if (!result.success) {
-      const fieldErrors = {};
-      result.error.issues.forEach((issue) => {
-        const fieldName = issue.path[0];
-        fieldErrors[fieldName] = issue.message;
-      });
-      setErrors(fieldErrors);
+    if (form.password !== form.confirmPassword) {
+      alert("Passwords do not match!");
       return;
     }
-
-    const payload = {
-      firstname: form.firstName,
-      lastname: form.lastName,
-      email: form.email,
-      password: form.password,
-      confirmPassword: form.confirmPassword,
-    };
 
     try {
       setLoading(true);
 
-      const res = await axios.post(
+      const payload = {
+        firstname: form.firstName,
+        lastname: form.lastName,
+        email: form.email,
+        phone_number: form.phone,
+        password: form.password,
+        confirmPassword: form.confirmPassword,
+      };
+
+      const res = await fetch(
         "https://overdecorative-noncosmically-lucile.ngrok-free.dev/api/auth/signup",
-        payload,
         {
-          headers: { "Content-Type": "application/json" },
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
         }
       );
 
-      console.log("Signup API response:", res.data);
+      const data = await res.json();
+      console.log("Signup response:", data);
+
+      if (!res.ok) {
+        // backend se error
+        const msg = data.message || "Signup failed";
+        setError(msg);
+        alert(msg);
+        return;
+      }
 
       alert("Signup Successful! Please login with same email & password.");
+
+      setForm({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        password: "",
+        confirmPassword: "",
+      });
+
       navigate("/login");
-    } catch (error) {
-      console.error("Signup error:", error);
-      console.log("Signup error response:", error?.response?.data);
-
-      const message =
-        error?.response?.data?.message ||
-        error?.response?.data?.error ||
-        error?.message ||
-        "Something went wrong. Please try again.";
-
-      setApiError(message);
-      alert(message);
+    } catch (err: any) {
+      console.error("Signup error:", err);
+      setError(err.message || "Something went wrong");
+      alert("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -147,51 +114,41 @@ const Signup = () => {
                     {/* <h4 className="login-subtitle">Sign Up</h4> */}
                   </div>
                   <form onSubmit={handleSubmit}>
-                    <div className="row g-4 mb-4">
-                      <div className="col-xl-6">
-                        <label className="form-label">First Name</label>
-                        <div className="input-group">
-                          <span className="input-group-text">
-                            <i className="bi bi-person-fill"></i>
-                          </span>
-                          <input
-                            type="email"
-                            className="form-control"
-                            placeholder="Enter your first name"
-                            value={form.firstName}
-                            onChange={(e) =>
-                              setForm({ ...form, firstName: e.target.value })
-                            }
-                          />
-                        </div>
-                        {errors.firstName && (
-                          <p style={{ color: "red", fontSize: 13 }}>
-                            {errors.firstName}
-                          </p>
-                        )}
+                    <div className="mb-4">
+                      <label className="form-label">First Name</label>
+                      <div className="input-group">
+                        <span className="input-group-text">
+                          <i className="bi bi-person-fill"></i>
+                        </span>
+                        <input
+                          type="email"
+                          className="form-control"
+                          placeholder="Enter your first name"
+                          value={form.firstName}
+                          onChange={(e) =>
+                            setForm({ ...form, firstName: e.target.value })
+                          }
+                          required
+                        />
                       </div>
+                    </div>
 
-                      <div className="col-xl-6">
-                        <label className="form-label">Last Name</label>
-                        <div className="input-group">
-                          <span className="input-group-text">
-                            <i className="bi bi-person-fill"></i>
-                          </span>
-                          <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Enter your last name"
-                            value={form.lastName}
-                            onChange={(e) =>
-                              setForm({ ...form, lastName: e.target.value })
-                            }
-                          />
-                        </div>
-                        {errors.lastName && (
-                          <p style={{ color: "red", fontSize: 13 }}>
-                            {errors.lastName}
-                          </p>
-                        )}
+                    <div className="mb-4">
+                      <label className="form-label">Last Name</label>
+                      <div className="input-group">
+                        <span className="input-group-text">
+                          <i className="bi bi-person-fill"></i>
+                        </span>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Enter your last name"
+                          value={form.lastName}
+                          onChange={(e) =>
+                            setForm({ ...form, lastName: e.target.value })
+                          }
+                          required
+                        />
                       </div>
                     </div>
 
@@ -209,13 +166,9 @@ const Signup = () => {
                           onChange={(e) =>
                             setForm({ ...form, email: e.target.value })
                           }
+                          required
                         />
                       </div>
-                      {errors.email && (
-                        <p style={{ color: "red", fontSize: 13 }}>
-                          {errors.email}
-                        </p>
-                      )}
                     </div>
 
                     <div className="mb-4">
@@ -256,7 +209,9 @@ const Signup = () => {
                             setForm({ ...form, password: e.target.value })
                           }
                           placeholder="Enter Password"
+                          required
                         />
+
                         <span
                           className="input-group-text field-icon toggle-password"
                           onClick={() => setShowPassword(!showPassword)}
@@ -269,11 +224,6 @@ const Signup = () => {
                           )}
                         </span>
                       </div>
-                      {errors.password && (
-                        <p style={{ color: "red", fontSize: 13 }}>
-                          {errors.password}
-                        </p>
-                      )}
                     </div>
 
                     <div className="mb-4">
@@ -297,6 +247,7 @@ const Signup = () => {
                             })
                           }
                           placeholder="Enter Confirm password"
+                          required
                         />
 
                         <span
@@ -313,18 +264,13 @@ const Signup = () => {
                           )}
                         </span>
                       </div>
-                      {errors.confirmPassword && (
-                        <p style={{ color: "red", fontSize: 13 }}>
-                          {errors.confirmPassword}
-                        </p>
-                      )}
                     </div>
-                    {apiError && (
+                    {error && (
                       <p
                         style={{ color: "red", fontSize: 13 }}
                         className="mb-2 text-center"
                       >
-                        {apiError}
+                        {error}
                       </p>
                     )}
 

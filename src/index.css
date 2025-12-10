@@ -1,0 +1,370 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap');
+
+:root {
+    --bs-body-font-family: "Google Sans Flex",
+        sans-serif;
+    --bs-body-bg: #fff;
+    --bs-body-color: #000;
+    --bs-gradient: linear-gradient(90deg, #2668ca 0%, #72a6f4 100%);
+
+    --primary: #1060B4;
+    --bs-primary: var(--primary);
+    --bs-primary-rgb: 16, 96, 180;
+    --bs-primary-hover: #0e539c;
+
+    --secondary: #FA470B;
+    --bs-secondary: var(--secondary);
+    --bs-secondary-rgb: 250, 71, 11;
+    --bs-secondary-hover: #e03e00;
+    --bs-danger: #f15151;
+    --bs-danger-rgb: 241, 81, 81;
+    --bs-success: #168961;
+    --bs-success-rgb: 22, 137, 97;
+    --bs-success-hover: #45c296;
+}
+
+*,
+p,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    padding: 0;
+    margin: 0;
+}
+
+dl,
+ol,
+ul {
+    margin-bottom: 0;
+    padding-left: 1.5rem;
+}
+
+b,
+strong {
+    font-weight: 600;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #f1f2f5;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+    height: 43px;
+    background-color: #a9afbb;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #1255a8;
+}
+
+:focus-visible {
+    outline: none;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--bs-body-font-family);
+    font-size: 16px;
+    line-height: 22px;
+    position: relative;
+    background-color: var(--bs-body-bg);
+}
+
+.scrollable-content {
+    /* flex: 1; */
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden auto;
+    padding-right: 5px;
+    margin-right: -5px;
+}
+
+a,
+a:hover {
+    text-decoration: none;
+    color: var(--bs-primary);
+}
+
+a:hover {
+    color: var(--bs-primary-hover);
+}
+
+a:-webkit-any-link:focus-visible {
+    outline: none;
+}
+
+button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+@media (min-width: 1600px) {
+
+    .container,
+    .container-lg,
+    .container-md,
+    .container-sm,
+    .container-xl,
+    .container-xxl {
+        max-width: 1564px;
+    }
+}
+
+.mb-40 {
+    margin-bottom: 40px !important;
+}
+
+.login-title {
+    font-size: 35px;
+    line-height: 36.4px;
+    text-transform: capitalize;
+    padding-left: 21px;
+    position: relative;
+    margin-bottom: 60px;
+}
+
+.login-title:before {
+    position: absolute;
+    content: '';
+    left: 0;
+    width: 6.69px;
+    height: 28px;
+    background: var(--secondary);
+}
+
+.login-subtitle {
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 100%;
+    margin-bottom: 56px;
+}
+
+.login-img img {
+    max-width: 80%;
+}
+
+.login-form {
+    max-width: 625px;
+    max-height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #DDE5EF;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, #FFFFFF 100%);
+    border-radius: 24px;
+    padding: 70px 60px;
+    margin: 0 auto;
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 8px;
+    text-transform: capitalize;
+}
+
+.form-control,
+.form-select {
+    background-color: #FBFDFF !important;
+    border-color: #DDE5EF;
+    border-radius: 6px;
+    padding: 16px 20px;
+    font-size: 15px;
+    line-height: 20px;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #FBFDFF inset !important;
+    box-shadow: 0 0 0px 1000px #FBFDFF inset !important;
+    /* -webkit-text-fill-color: #fff !important; */
+}
+
+.form-control::-moz-placeholder,
+.form-select::-moz-placeholder {
+    color: #B1C2D7 !important;
+    opacity: 1;
+}
+
+.form-control:-ms-input-placeholder,
+.form-select:-ms-input-placeholder,
+.form-control::-webkit-input-placeholder,
+.form-select::-webkit-input-placeholder {
+    color: #B1C2D7 !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+    outline: 0;
+    box-shadow: none;
+    border-color: var(--bs-primary);
+    color: var(--bs-body-color);
+}
+
+.form-control[readonly],
+.form-control.disabled,
+.form-select[readonly],
+.form-select.disabled {
+    color: #B1C2D7;
+}
+
+.input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 100%;
+}
+
+.input-group-text {
+    background-color: #FBFDFF;
+    border-radius: 6px;
+    color: #B1C2D7;
+    padding: 10px 20px;
+    border-color: #DDE5EF;
+}
+
+.input-group>.form-control:nth-child(2),
+.input-group>.form-select:nth-child(2) {
+    border-left: 0;
+    padding-left: 0;
+}
+
+.input-group.password-field:focus,
+.form-control:focus~.input-group-text,
+.input-group:focus-within .input-group-text,
+.input-group:focus-within .form-control {
+    border-color: var(--bs-primary);
+}
+
+.input-group-text .clear {
+    cursor: pointer;
+}
+
+.input-group-text:last-child {
+    border-left: none;
+    padding-left: 4px;
+}
+
+.input-group:not(.has-validation)>.dropdown-toggle:nth-last-child(n+3),
+.input-group:not(.has-validation)>.form-floating:not(:last-child)>.form-control,
+.input-group:not(.has-validation)>.form-floating:not(:last-child)>.form-select,
+.input-group:not(.has-validation)>:not(:last-child):not(.dropdown-toggle):not(.dropdown-menu):not(.form-floating) {
+    border-right: 0;
+}
+
+.btn {
+    --bs-btn-padding-x: 24px;
+    --bs-btn-padding-y: 14px;
+    --bs-btn-box-shadow: none;
+    --bs-btn-font-weight: 700;
+    --bs-btn-font-size: 16px;
+    --bs-btn-line-height: 100%;
+    --bs-btn-border-width: 1px;
+    --bs-btn-border-radius: 6px;
+    text-transform: capitalize;
+
+}
+
+.btn-primary {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--bs-primary);
+    --bs-btn-border-color: var(--bs-primary);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--bs-primary-hover);
+    --bs-btn-hover-border-color: var(--bs-primary-hover);
+    --bs-btn-focus-shadow-rgb: none;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: var(--bs-primary-hover);
+    --bs-btn-active-border-color: var(--bs-primary-hover);
+    --bs-btn-active-shadow: none;
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: var(--bs-primary);
+    --bs-btn-disabled-border-color: var(--bs-primary);
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--bs-primary);
+    --bs-btn-border-color: var(--bs-primary);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--bs-primary);
+    --bs-btn-hover-border-color: var(--bs-primary);
+    --bs-btn-focus-shadow-rgb: none;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: var(--bs-primary);
+    --bs-btn-active-border-color: var(--bs-primary);
+    --bs-btn-active-shadow: none;
+    --bs-btn-disabled-color: var(--bs-primary);
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: var(--bs-primary);
+    --bs-gradient: none;
+}
+
+.btn-secondary {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--bs-secondary);
+    --bs-btn-border-color: var(--bs-secondary);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--bs-secondary-hover);
+    --bs-btn-hover-border-color: var(--bs-secondary-hover);
+    --bs-btn-focus-shadow-rgb: none;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: var(--bs-secondary-hover);
+    --bs-btn-active-border-color: var(--bs-secondary-hover);
+    --bs-btn-active-shadow: none;
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: var(--bs-secondary);
+    --bs-btn-disabled-border-color: var(--bs-secondary);
+}
+
+.btn-outline-secondary {
+    --bs-btn-color: var(--bs-secondary);
+    --bs-btn-border-color: var(--bs-secondary);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--bs-secondary);
+    --bs-btn-hover-border-color: var(--bs-secondary);
+    --bs-btn-focus-shadow-rgb: none;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: var(--bs-secondary);
+    --bs-btn-active-border-color: var(--bs-secondary);
+    --bs-btn-active-shadow: none;
+    --bs-btn-disabled-color: var(--bs-secondary);
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: var(--bs-secondary);
+    --bs-gradient: none;
+}
+
+.btn-login,
+.btn-signup {
+    --bs-btn-padding-y: 18px;
+    font-size: 18px;
+}
+
+.forgot-link {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+
+
+/*-------------------------- Responsive CSS --------------------------*/
+.login-form {
+    padding: 40px;
+}
